@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <base target="_top">
+
+  <?!= HtmlService.createHtmlOutputFromFile('ObjectCard.css').getContent(); ?>
+
+</head>
+
+<body>
+
+<script>
+
+const OBJECT_UUID = "<?= objectUuid ?>";
+
+window.onload = function () {
+
+    loadObject(OBJECT_UUID);
+
+};
+
+</script>
+
+<div class="page">
+
+    <div class="header">
+
+        <div>
+
+            <div id="objectNumber" class="number"></div>
+
+            <div id="objectName" class="title"></div>
+
+        </div>
+
+        <div id="objectStatus" class="status"></div>
+
+    </div>
+
+    <div class="section">
+
+        <div class="sectionTitle">
+            Основная информация
+        </div>
+
+        <div class="grid">
+
+            <div class="field">
+
+                <label>Адрес</label>
+
+                <input id="address" readonly>
+
+            </div>
+
+            <div class="field">
+
+                <label>Площадь</label>
+
+                <input id="area" readonly>
+
+            </div>
+
+            <div class="field">
+
+                <label>Прораб</label>
+
+                <input id="foreman" readonly>
+
+            </div>
+
+            <div class="field">
+
+                <label>Дата начала</label>
+
+                <input id="dateStart" readonly>
+
+            </div>
+
+            <div class="field">
+
+                <label>Дата окончания</label>
+
+                <input id="dateFinish" readonly>
+
+            </div>
+
+            <div class="field">
+
+                <label>Стоимость договора</label>
+
+                <input id="contractAmount" readonly>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="tabs">
+
+        <button class="tab active" onclick="showTab('object')">
+            Объект
+        </button>
+
+        <button class="tab" onclick="showTab('acts')">
+            Акты
+        </button>
+
+        <button class="tab" onclick="showTab('services')">
+            Доп. услуги
+        </button>
+
+        <button class="tab" onclick="showTab('finance')">
+            Финансы
+        </button>
+
+        <button class="tab" onclick="showTab('history')">
+            История
+        </button>
+
+    </div>
+
+    <div id="tab-object" class="tabPage">
+
+        <h3>Информация об объекте</h3>
+
+    </div>
+
+    <div id="tab-acts" class="tabPage hidden">
+
+        <h3>Акты</h3>
+
+    </div>
+
+    <div id="tab-services" class="tabPage hidden">
+
+        <h3>Дополнительные услуги</h3>
+
+    </div>
+
+    <div id="tab-finance" class="tabPage hidden">
+
+        <h3>Финансы</h3>
+
+    </div>
+
+    <div id="tab-history" class="tabPage hidden">
+
+        <h3>История</h3>
+
+    </div>
+
+</div>
+
+<?!= HtmlService.createHtmlOutputFromFile('ObjectCard.js').getContent(); ?>
+
+</body>
+
+</html>

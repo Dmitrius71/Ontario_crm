@@ -1,0 +1,104 @@
+<script>
+
+let currentTab = "object";
+
+function showTab(tabName) {
+
+    document.querySelectorAll(".tabPage").forEach(page => {
+
+        page.classList.add("hidden");
+
+    });
+
+    document.querySelectorAll(".tab").forEach(button => {
+
+        button.classList.remove("active");
+
+    });
+
+    document
+        .getElementById("tab-" + tabName)
+        .classList.remove("hidden");
+
+    event.target.classList.add("active");
+
+    currentTab = tabName;
+
+}
+
+function loadObject(uuid) {
+
+    google.script.run
+
+        .withSuccessHandler(fillForm)
+
+        .withFailureHandler(function(error){
+
+            alert(error.message);
+
+        })
+
+        .getObject(uuid);
+
+}
+
+function fillForm(object) {
+
+    if (!object) {
+
+        alert("Объект не найден.");
+
+        return;
+
+    }
+
+    document.getElementById("objectNumber").textContent =
+        object.number;
+
+    document.getElementById("objectName").textContent =
+        object.name;
+
+    document.getElementById("objectStatus").textContent =
+        object.status;
+
+    document.getElementById("address").value =
+        object.address;
+
+    document.getElementById("area").value =
+        object.area;
+
+    document.getElementById("foreman").value =
+        object.foreman;
+
+    document.getElementById("dateStart").value =
+        formatDate(object.contractDateStart);
+
+    document.getElementById("dateFinish").value =
+        formatDate(object.contractDateFinish);
+
+    document.getElementById("contractAmount").value =
+        formatMoney(object.contractAmount);
+
+}
+
+function formatMoney(value) {
+
+    if (!value)
+        return "";
+
+    return Number(value).toLocaleString("ru-RU");
+
+}
+
+function formatDate(value) {
+
+    if (!value)
+        return "";
+
+    const date = new Date(value);
+
+    return date.toLocaleDateString("ru-RU");
+
+}
+
+</script>

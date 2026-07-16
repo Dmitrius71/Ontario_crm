@@ -1,11 +1,20 @@
 /**
  * ==========================================================
  * Ontario CRM
- * Config v1.0.0
+ * Config
+ * Version: 2.0.0
  * ==========================================================
  */
 
-const CONFIG = {
+const CONFIG = Object.freeze({
+
+  APP: {
+
+    NAME: "Ontario CRM",
+
+    VERSION: "2.0.0"
+
+  },
 
   SHEETS: {
 
@@ -23,13 +32,13 @@ const CONFIG = {
 
   STATUS: {
 
-    WORKING: "Работает",
+    WORKING: "WORKING",
 
-    PAUSED: "Приостановлен",
+    PAUSED: "PAUSED",
 
-    FINISHED: "Завершен",
+    FINISHED: "FINISHED",
 
-    ARCHIVED: "Архив"
+    ARCHIVED: "ARCHIVED"
 
   },
 
@@ -45,4 +54,4 @@ const CONFIG = {
 
   }
 
-};
+});

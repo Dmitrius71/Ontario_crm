@@ -1,0 +1,141 @@
+<style>
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#f5f5f5;
+    padding:15px;
+}
+
+.page{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#ffffff;
+    border-radius:8px;
+    padding:15px;
+    box-shadow:0 1px 3px rgba(0,0,0,.1);
+}
+
+.number{
+    color:#1a73e8;
+    font-size:14px;
+    font-weight:bold;
+}
+
+.title{
+    font-size:22px;
+    font-weight:bold;
+    margin-top:5px;
+}
+
+.status{
+    background:#2e7d32;
+    color:#fff;
+    padding:8px 16px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.section{
+    background:#fff;
+    border-radius:8px;
+    padding:15px;
+    box-shadow:0 1px 3px rgba(0,0,0,.1);
+}
+
+.sectionTitle{
+    font-size:16px;
+    font-weight:bold;
+    margin-bottom:15px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.field{
+    display:flex;
+    flex-direction:column;
+}
+
+.field label{
+    font-size:12px;
+    color:#666;
+    margin-bottom:4px;
+}
+
+.field input{
+    border:1px solid #d0d0d0;
+    border-radius:6px;
+    padding:8px;
+    background:#fafafa;
+}
+
+.tabs{
+    display:flex;
+    gap:5px;
+}
+
+.tab{
+    flex:1;
+    border:none;
+    padding:10px;
+    border-radius:6px 6px 0 0;
+    background:#d9d9d9;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.tab:hover{
+    background:#c6c6c6;
+}
+
+.tab.active{
+    background:#1a73e8;
+    color:#fff;
+}
+
+.tabPage{
+    background:#fff;
+    border-radius:0 8px 8px 8px;
+    padding:20px;
+    min-height:350px;
+    box-shadow:0 1px 3px rgba(0,0,0,.1);
+}
+
+.hidden{
+    display:none;
+}
+
+@media (max-width:700px){
+
+.grid{
+    grid-template-columns:1fr;
+}
+
+.tabs{
+    flex-wrap:wrap;
+}
+
+.tab{
+    flex:0 0 calc(50% - 3px);
+}
+
+}
+
+</style>

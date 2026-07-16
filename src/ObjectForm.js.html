@@ -1,0 +1,94 @@
+<script>
+
+function getValue(id) {
+    return document.getElementById(id).value.trim();
+}
+
+function setLoading(loading) {
+
+    const btn = document.getElementById("saveBtn");
+
+    if (loading) {
+        btn.disabled = true;
+        btn.textContent = "Сохранение...";
+    } else {
+        btn.disabled = false;
+        btn.textContent = "Сохранить";
+    }
+
+}
+
+function validate(data) {
+
+    if (!data.name) {
+        alert("Введите название объекта.");
+        return false;
+    }
+
+    if (!data.address) {
+        alert("Введите адрес объекта.");
+        return false;
+    }
+
+    if (!data.contractDateStart) {
+        alert("Укажите дату начала.");
+        return false;
+    }
+
+    if (!data.contractDateFinish) {
+        alert("Укажите дату окончания.");
+        return false;
+    }
+
+    return true;
+
+}
+
+function saveObject() {
+
+    const data = {
+
+        name: getValue("name"),
+
+        address: getValue("address"),
+
+        area: getValue("area"),
+
+        foreman: getValue("foreman"),
+
+        contractDateStart: document.getElementById("start").value,
+
+        contractDateFinish: document.getElementById("finish").value,
+
+        contractAmount: getValue("amount")
+
+    };
+
+    if (!validate(data))
+        return;
+
+    setLoading(true);
+
+    google.script.run
+
+        .withSuccessHandler(function () {
+
+            alert("Объект успешно создан.");
+
+            google.script.host.close();
+
+        })
+
+        .withFailureHandler(function (error) {
+
+            setLoading(false);
+
+            alert(error.message);
+
+        })
+
+        .createObject(data);
+
+}
+
+</script>

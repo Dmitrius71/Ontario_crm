@@ -1,37 +1,69 @@
 /**
  * ==========================================================
  * Ontario CRM
- * NumberService v2.0.0
+ * NumberService
+ * Version: 2.0.0
  * ==========================================================
+ *
+ * Генерация номеров документов CRM.
+ *
  */
 
 const NumberService = (() => {
 
-  const PREFIX = "ON-";
+  const OBJECT_PREFIX = "ON-";
 
+  /**
+   * Следующий номер объекта
+   *
+   * @returns {string}
+   */
   function nextObjectNumber() {
 
-    let value =
-      Number(
-        SystemRepository.get("objectNumber")
-      ) || 0;
-
-    value++;
-
-    SystemRepository.set(
-      "objectNumber",
-      value
+    const number = SystemRepository.increment(
+      CONFIG.SYSTEM.OBJECT_NUMBER
     );
 
-    return PREFIX +
-      String(value).padStart(4, "0");
+    return (
+      OBJECT_PREFIX +
+      String(number).padStart(4, "0")
+    );
+
+  }
+
+  /**
+   * Следующий номер документа
+   *
+   * @returns {number}
+   */
+  function nextDocumentNumber() {
+
+    return SystemRepository.increment(
+      CONFIG.SYSTEM.DOCUMENT_NUMBER
+    );
 
   }
 
   return {
 
-    nextObjectNumber
+    nextObjectNumber,
+
+    nextDocumentNumber
 
   };
 
 })();
+
+/**
+ * ==========================================================
+ * TEST
+ * ==========================================================
+ */
+
+function testNumberService() {
+
+  Logger.log(
+    NumberService.nextObjectNumber()
+  );
+
+}

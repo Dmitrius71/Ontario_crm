@@ -1,11 +1,9 @@
 /**
  * ==========================================================
  * Ontario CRM
- * ObjectService v2.0.0
+ * ObjectService
+ * Version: 2.0.0
  * ==========================================================
- *
- * Бизнес-логика работы с объектами
- *
  */
 
 const ObjectService = (() => {
@@ -23,13 +21,13 @@ const ObjectService = (() => {
 
       number: NumberService.nextObjectNumber(),
 
-      name: data.name,
+      name: data.name.trim(),
 
-      address: data.address,
+      address: data.address.trim(),
 
       area: Number(data.area) || 0,
 
-      foremanUuid: data.foremanUuid,
+      foreman: data.foreman || "",
 
       status: CONFIG.STATUS.WORKING,
 
@@ -46,16 +44,6 @@ const ObjectService = (() => {
     };
 
     ObjectRepository.insert(object);
-
-    HistoryService.add({
-
-      objectUuid: object.uuid,
-
-      event: "OBJECT_CREATED",
-
-      description: "Создан новый объект"
-
-    });
 
     return object;
 
@@ -86,32 +74,6 @@ const ObjectService = (() => {
   }
 
   /**
-   * Архивировать объект
-   */
-  function archive(uuid) {
-
-    const object = get(uuid);
-
-    if (!object)
-      throw new Error("Объект не найден.");
-
-    object.status = CONFIG.STATUS.ARCHIVED;
-
-    update(object);
-
-    HistoryService.add({
-
-      objectUuid: uuid,
-
-      event: "OBJECT_ARCHIVED",
-
-      description: "Объект перенесён в архив"
-
-    });
-
-  }
-
-  /**
    * Проверка данных
    */
   function validate(data) {
@@ -128,13 +90,8 @@ const ObjectService = (() => {
     if (!data.contractDateFinish)
       throw new Error("Не указана дата окончания.");
 
-    if (
-      Number(data.contractAmount) <= 0
-    ) {
-      throw new Error(
-        "Стоимость договора должна быть больше нуля."
-      );
-    }
+    if (Number(data.contractAmount) < 0)
+      throw new Error("Стоимость договора не может быть отрицательной.");
 
   }
 
@@ -144,10 +101,38 @@ const ObjectService = (() => {
 
     get,
 
-    update,
-
-    archive
+    update
 
   };
 
 })();
+
+/**
+ * ==========================================================
+ * TEST
+ * ==========================================================
+ */
+
+function testCreateObject() {
+
+  const object = ObjectService.create({
+
+    name: "Тестовый объект",
+
+    address: "Москва",
+
+    area: 75,
+
+    foreman: "Иванов",
+
+    contractDateStart: new Date(),
+
+    contractDateFinish: new Date(),
+
+    contractAmount: 1000000
+
+  });
+
+  Logger.log(object);
+
+}

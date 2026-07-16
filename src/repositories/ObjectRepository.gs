@@ -1,161 +1,141 @@
 /**
  * ==========================================================
  * Ontario CRM
- * ObjectRepository v2.0.0
+ * ObjectRepository
+ * Version: 2.0.0
  * ==========================================================
- *
- * Работа с таблицей "Объекты"
- *
  */
 
 const ObjectRepository = (() => {
 
-  const SHEET = CONFIG.SHEETS.OBJECTS;
+  const SHEET_NAME = CONFIG.SHEETS.OBJECTS;
 
-  /**
-   * Лист
-   */
+  const COL = Object.freeze({
+
+    UUID: 0,
+    NUMBER: 1,
+    NAME: 2,
+    ADDRESS: 3,
+    AREA: 4,
+    FOREMAN: 5,
+    STATUS: 6,
+    DATE_START: 7,
+    DATE_FINISH: 8,
+    CONTRACT_SUM: 9,
+    CREATED_AT: 10,
+    UPDATED_AT: 11
+
+  });
+
   function sheet() {
 
-    return BaseRepository.getSheet(SHEET);
+    const sheet = SpreadsheetApp
+      .getActiveSpreadsheet()
+      .getSheetByName(SHEET_NAME);
+
+    if (!sheet)
+      throw new Error(`Лист "${SHEET_NAME}" не найден.`);
+
+    return sheet;
 
   }
 
-  /**
-   * Все объекты
-   */
   function getAll() {
 
     const sh = sheet();
 
-    const rows =
-      BaseRepository.getRows(sh);
+    if (sh.getLastRow() < 2)
+      return [];
 
-    return rows.map(toObject);
+    const rows = sh
+      .getRange(
+        2,
+        1,
+        sh.getLastRow() - 1,
+        sh.getLastColumn()
+      )
+      .getValues();
+
+    return rows.map(rowToObject);
 
   }
 
-  /**
-   * Получить объект
-   */
   function get(uuid) {
 
-    const sh = sheet();
+    const list = getAll();
 
-    const result =
-      BaseRepository.findRowByUuid(
-        sh,
-        uuid
-      );
-
-    if (!result)
-      return null;
-
-    return toObject(result.values);
+    return list.find(o => o.uuid === uuid) || null;
 
   }
 
-  /**
-   * Сохранить
-   */
   function insert(object) {
 
-    const sh = sheet();
-
-    BaseRepository.append(
-      sh,
-      fromObject(object)
-    );
+    sheet().appendRow(objectToRow(object));
 
     return object;
 
   }
 
-  /**
-   * Обновить
-   */
   function update(object) {
 
     const sh = sheet();
 
-    const result =
-      BaseRepository.findRowByUuid(
-        sh,
-        object.uuid
-      );
+    const values = sh.getDataRange().getValues();
 
-    if (!result)
-      throw new Error(
-        "Объект не найден."
-      );
+    for (let i = 1; i < values.length; i++) {
 
-    BaseRepository.update(
-      sh,
-      result.row,
-      fromObject(object)
-    );
+      if (values[i][COL.UUID] === object.uuid) {
 
-    return object;
+        sh.getRange(
+          i + 1,
+          1,
+          1,
+          12
+        ).setValues([objectToRow(object)]);
 
-  }
+        return object;
 
-  /**
-   * Архивировать
-   */
-  function archive(uuid) {
+      }
 
-    const object = get(uuid);
+    }
 
-    if (!object)
-      return;
-
-    object.status =
-      CONFIG.STATUS.ARCHIVED;
-
-    update(object);
+    throw new Error("Объект не найден.");
 
   }
 
-  /**
-   * Google Sheet → Object
-   */
-  function toObject(row) {
+  function rowToObject(row) {
 
     return {
 
-      uuid: row[0],
+      uuid: row[COL.UUID],
 
-      number: row[1],
+      number: row[COL.NUMBER],
 
-      name: row[2],
+      name: row[COL.NAME],
 
-      address: row[3],
+      address: row[COL.ADDRESS],
 
-      area: Number(row[4]) || 0,
+      area: Number(row[COL.AREA]) || 0,
 
-      foremanUuid: row[5],
+      foreman: row[COL.FOREMAN],
 
-      status: row[6],
+      status: row[COL.STATUS],
 
-      contractDateStart: row[7],
+      contractDateStart: row[COL.DATE_START],
 
-      contractDateFinish: row[8],
+      contractDateFinish: row[COL.DATE_FINISH],
 
-      contractAmount:
-        Number(row[9]) || 0,
+      contractAmount: Number(row[COL.CONTRACT_SUM]) || 0,
 
-      createdAt: row[10],
+      createdAt: row[COL.CREATED_AT],
 
-      updatedAt: row[11]
+      updatedAt: row[COL.UPDATED_AT]
 
     };
 
   }
 
-  /**
-   * Object → Google Sheet
-   */
-  function fromObject(object) {
+  function objectToRow(object) {
 
     return [
 
@@ -169,7 +149,7 @@ const ObjectRepository = (() => {
 
       object.area,
 
-      object.foremanUuid,
+      object.foreman,
 
       object.status,
 
@@ -195,10 +175,22 @@ const ObjectRepository = (() => {
 
     insert,
 
-    update,
-
-    archive
+    update
 
   };
 
 })();
+
+/**
+ * ==========================================================
+ * TEST
+ * ==========================================================
+ */
+
+function testObjectRepository() {
+
+  Logger.log(
+    ObjectRepository.getAll()
+  );
+
+}
